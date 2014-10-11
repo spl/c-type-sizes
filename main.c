@@ -33,6 +33,7 @@ int main() {
   print_newline();
 
   print_type_size(void *);
+  print_type_size(void (*)());
   print_newline();
 
   printf("stdint.h types:\n");
