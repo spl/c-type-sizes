@@ -1,8 +1,27 @@
+#include <stddef.h>
 #include <stdio.h>
 #include <stdint.h>
 
-#define print_type_size(t) { printf("%20s: %2lu\n", #t, sizeof(t)); }
-#define print_newline()    { printf("\n"); }
+#if __STDC_VERSION__ >= 201112L
+#define alignof _Alignof
+#else
+#define alignof(type) offsetof (struct { char c; type member; }, member)
+#endif
+
+#define print_type_size(t) { \
+  printf("%20s: %2lu", #t, sizeof(t)); \
+  \
+  if (alignof(t) != sizeof(t)) { \
+    printf(" (alignment: %2lu)", alignof(t)); \
+  } \
+  \
+  printf("\n"); \
+}
+#define print_newline() { \
+  printf("\n"); \
+}
+
+typedef void (*function_pointer) (void);
 
 int main() {
   printf("Built-in types:\n");
@@ -33,7 +52,7 @@ int main() {
   print_newline();
 
   print_type_size(void *);
-  print_type_size(void (*)());
+  print_type_size(function_pointer);
   print_newline();
 
   printf("stdint.h types:\n");
