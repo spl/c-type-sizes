@@ -8,16 +8,15 @@
 #define alignof(type) offsetof (struct { char c; type member; }, member)
 #endif
 
-#define print_type_size(t) { \
+#define print_type_size(t) { print_type_size_with_alignment(t, alignof(t)); }
+#define print_newline()    { printf("\n"); }
+#define print_type_size_with_alignment(t, alignment) { \
   printf("%20s: %2lu", #t, sizeof(t)); \
   \
-  if (alignof(t) != sizeof(t)) { \
-    printf(" (alignment: %2lu)", alignof(t)); \
+  if (alignment != sizeof(t)) { \
+    printf(" (alignment: %2lu)", alignment); \
   } \
   \
-  printf("\n"); \
-}
-#define print_newline() { \
   printf("\n"); \
 }
 
@@ -52,7 +51,7 @@ int main() {
   print_newline();
 
   print_type_size(void *);
-  print_type_size(function_pointer);
+  print_type_size_with_alignment(void (*)(), alignof(function_pointer));
   print_newline();
 
   printf("stdint.h types:\n");
