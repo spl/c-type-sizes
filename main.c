@@ -2,24 +2,32 @@
 #include <stdio.h>
 #include <stdint.h>
 
+/* A macro to get the alignment of a type */
 #if __STDC_VERSION__ >= 201112L
+/* _Alignof is standardized in C11. */
 #define alignof _Alignof
 #else
+/* This is a portable trick to get the alignment of a type. Note that it only
+ * works if the type is a prefix declaration. See the typedef workaround for the
+ * function pointer type below.
+ */
 #define alignof(type) offsetof (struct { char c; type member; }, member)
 #endif
 
-#define print_type_size(t) { print_type_size_with_alignment(t, alignof(t)); }
 #define print_newline()    { printf("\n"); }
-#define print_type_size_with_alignment(t, alignment) { \
+#define print_type_size(t) { \
   printf("%20s: %2lu", #t, sizeof(t)); \
   \
-  if (alignment != sizeof(t)) { \
-    printf(" (alignment: %2lu)", alignment); \
+  if (alignof(t) != sizeof(t)) { \
+    printf(" (alignment: %2lu)", alignof(t)); \
   } \
   \
-  printf("\n"); \
+  print_newline(); \
 }
 
+/* We use this typedef as workaround to use the alignof macro above on a
+ * function pointer type, which is not a prefix declaration like other types.
+ */
 typedef void (*function_pointer) (void);
 
 int main() {
@@ -51,7 +59,7 @@ int main() {
   print_newline();
 
   print_type_size(void *);
-  print_type_size_with_alignment(void (*)(), alignof(function_pointer));
+  print_type_size(function_pointer);
   print_newline();
 
   printf("stdint.h types:\n");
