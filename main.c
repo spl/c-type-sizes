@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 /* A macro to get the alignment of a type */
 #if __STDC_VERSION__ >= 201112L
@@ -74,4 +75,6 @@ int main() {
   print_newline();
 
   print_type_size(size_t);
+
+  return EXIT_SUCCESS;
 }
