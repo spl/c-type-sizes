@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #define print_type_size(t) { printf("%20s: %2lu\n", #t, sizeof(t)); }
 #define print_newline()    { printf("\n"); }
@@ -48,4 +49,6 @@ int main() {
   print_newline();
 
   print_type_size(size_t);
+
+  return EXIT_SUCCESS;
 }
